@@ -1,0 +1,47 @@
+name: Deploy K-Glow to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: تحميل المشروع
+        uses: actions/checkout@v4
+
+      - name: إعداد Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: تثبيت الحزم
+        run: npm install
+
+      - name: بناء الموقع
+        run: npm run build
+
+      - name: إعداد GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: رفع ملفات الموقع
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - name: نشر الموقع
+        id: deployment
+        uses: actions/deploy-pages@v4
