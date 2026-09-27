@@ -23,6 +23,13 @@ jobs:
       - name: تحميل المشروع
         uses: actions/checkout@v4
 
+      - name: فك ملفات المشروع الأصلية
+        run: |
+          rm -rf /tmp/k-glow-source
+          mkdir -p /tmp/k-glow-source
+          unzip -q k-glow-source.zip -d /tmp/k-glow-source
+          rsync -a --exclude='.git' /tmp/k-glow-source/ ./
+
       - name: إعداد Node.js
         uses: actions/setup-node@v4
         with:
